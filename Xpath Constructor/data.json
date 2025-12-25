@@ -165,15 +165,13 @@
                 "autocapitalize": "off",
                 "autocomplete": "off",
                 "autocorrect": "off",
-                "id": "user-id",
                 "maxlength": "32",
                 "minlength": "6",
-                "name": "username",
-                "placeholder": "Enter User ID",
-                "required": "",
+                
+                
                 "style": "color: black !important;",
                 "tabindex": "2",
-                "type": "text",
+                
                 "ng-reflect-required": "",
                 "ng-reflect-minlength": "6",
                 "ng-reflect-maxlength": "32",
