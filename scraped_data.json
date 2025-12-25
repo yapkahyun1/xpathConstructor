@@ -1,0 +1,11 @@
+[
+  {
+    "tag": "div",
+    "attrs": {
+      "id": "login_credentials",
+      "class": "login_credentials",
+      "data-test": "login-credentials"
+    },
+    "text": "Accepted usernames are:standard_userlocked_out_userproblem_userperformance_glitch_usererror_uservisual_user"
+  }
+]
