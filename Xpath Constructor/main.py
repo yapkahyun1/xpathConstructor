@@ -8,19 +8,6 @@ from web_scraper import scrape_elements
 
 def get_first_xpath(data, stage_number):
     #initiaze var make sure its empty before processing
-    attr_id = ""
-    attr_name = ""
-    attr_type = ""
-    attr_role = ""
-    attr_placeholder = ""
-    attr_value = ""
-    attr_title = ""
-    attr_aria_label = ""
-
-
-
-
-
 
     for node in data.get("nodes", []):
         node_data = node.get("data", {})
@@ -75,7 +62,10 @@ def get_first_xpath(data, stage_number):
                         final_attrVal = attributes_data.get(attr_name)
                         if final_attrVal:
                             print(f'Attributes <{attr_name}> found, getting values now.........')
+                            element_data['xpath'] = f"//{tagName}[@{attr_name}='{final_attrVal}']"
                             return f"//{tagName}[@{attr_name}='{final_attrVal}']"
+                        
+                            
                         else:
                             # safely check if there is a next attribute
                             if i + 1 < len(attr_list):
@@ -93,6 +83,7 @@ def get_first_xpath(data, stage_number):
                                     print("Children JSON Structure detected, will proceed to build xpath")
                                     extracted_text_from_json = str(children_data[0].get('text'))
                                     print("Text Extracted from JSON: " + extracted_text_from_json)
+                                    element_data['xpath'] = f"//{tagName}[text()='{extracted_text_from_json}']"
                                     return f"//{tagName}[text()='{extracted_text_from_json}']"
 
 
@@ -103,6 +94,36 @@ def get_first_xpath(data, stage_number):
     
             
 #---------------------------------------- RELATIVE XPATH CONSTRUCTOR CORE FUNCTIONS --------------------------------------------------------------------------
+
+
+
+
+
+
+# #to form proper path for the json file and read
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# #print(BASE_DIR)
+# JSON_PATH = os.path.join(BASE_DIR, "data.json")
+# #print(JSON_PATH)
+# print("Looking for:", JSON_PATH)
+
+# try:
+#     with open(JSON_PATH, "r") as file:
+#         data = json.load(file)
+
+
+#         #print("Keys:", data.keys())
+# except FileNotFoundError:
+#     print("File not found:", JSON_PATH)
+# except json.JSONDecodeError:
+#     print("Error: failed to decode json")
+    
+
+# relative_xpath_construct = get_first_xpath(data, 4)
+# print("Final Output: " + str(relative_xpath_construct))
+# with open(JSON_PATH, 'w', encoding="utf-8") as f:
+#     json.dump(data, f, indent=2, ensure_ascii=False)
+#     print("✅ JSON updated with new XPath!")
 
 
 
@@ -129,12 +150,12 @@ for i in range(1, 5):
         print("File not found:", JSON_PATH)
     except json.JSONDecodeError:
         print("Error: failed to decode json")
-        
-
-
 
     relative_xpath_construct = get_first_xpath(data, i)
     print("Final Output: " + str(relative_xpath_construct))
+    with open(JSON_PATH, 'w', encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+        print("✅ JSON updated with new XPath!")
     if i == 4:
         print("NO MORE STAGE NUMBER LEFT ---------- WILL PROCEED TO END THE CONSTRUCTOR FUNCTION")
     else:

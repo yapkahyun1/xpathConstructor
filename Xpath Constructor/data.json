@@ -159,19 +159,21 @@
             },
             "element": {
               "tag_name": "input",
-              "xpath": "html/body/cimb-app/div/page-login/div[2]/div/div[4]/div/form/div[2]/div[2]/div/input",
+              "xpath": "//input[@id='user-id']",
               "attributes": {
                 "_ngcontent-c0": "",
                 "autocapitalize": "off",
                 "autocomplete": "off",
                 "autocorrect": "off",
+                "id": "user-id",
                 "maxlength": "32",
                 "minlength": "6",
-                
-                
+                "name": "username",
+                "placeholder": "Enter User ID",
+                "required": "",
                 "style": "color: black !important;",
                 "tabindex": "2",
-                
+                "type": "text",
                 "ng-reflect-required": "",
                 "ng-reflect-minlength": "6",
                 "ng-reflect-maxlength": "32",
@@ -702,7 +704,7 @@
             },
             "element": {
               "tag_name": "label",
-              "xpath": "html/body/cimb-app/div/page-login/div[2]/div/div[4]/div/form[2]/div[2]/div/label[2]",
+              "xpath": "//label[text()='Yes, this is my SecureWord']",
               "attributes": {
                 "_ngcontent-c0": "",
                 "class": "Login-font-border secure-word-label"
@@ -1493,7 +1495,7 @@
             },
             "element": {
               "tag_name": "a",
-              "xpath": "html/body/cimb-app/common-error-modal/div/div/div[3]/div/div[2]/a",
+              "xpath": "//a[text()='OK']",
               "attributes": {
                 "class": "btn btn-primary btn-full btn-half-left btn-yes cursor"
               },

@@ -166,7 +166,7 @@
                 "autocapitalize": "off",
                 "autocomplete": "off",
                 "autocorrect": "off",
-                
+                "id": "user-id",
                 "maxlength": "32",
                 "minlength": "6",
                 "name": "username",
