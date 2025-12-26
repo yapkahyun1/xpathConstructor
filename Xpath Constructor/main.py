@@ -2,14 +2,16 @@ import json
 import os
 from playwright.sync_api import sync_playwright
 from web_scraper import scrape_elements
+from playwright.sync_api import expect
+from smart_wait import wait_for_object_is_visible
 
 
+def relative_xpath_constructor(data, stage_number):
 
 
-def get_first_xpath(data, stage_number):
-    #initiaze var make sure its empty before processing
-
+    #enter the nodes structure first 
     for node in data.get("nodes", []):
+        #enter the data structure
         node_data = node.get("data", {})
         if node_data.get("stage_number") == stage_number:
             actions_data = node_data.get('actions', [])
@@ -24,7 +26,7 @@ def get_first_xpath(data, stage_number):
 
 
 
-                #get the last element
+                
                 #receivedTagName = 'span'
                 tagName = None
                 if element_data is None:
@@ -32,7 +34,9 @@ def get_first_xpath(data, stage_number):
                     return None
                 else:
                     print('Absolute Xpath from JSON: ' + str(element_data.get('xpath')))
+                    #get the last element
                     receivedTagName = str(element_data.get('xpath', '')).split('/')[-1]
+                    #removed index if required
                     if '[' in receivedTagName:
                         tagName = receivedTagName.split('[')[0]
                         print(f'element <{receivedTagName}> contains index, removed index and the final tagname is <{tagName}>')
@@ -46,17 +50,10 @@ def get_first_xpath(data, stage_number):
                     
 
                     attributes_data = element_data.get('attributes', {})
-                    #print(attributes_data)
-                    # attr_id = attributes_data.get('id')
-                    # attr_name = attributes_data.get('name')
-                    # attr_type = attributes_data.get('type')
-                    # attr_role = attributes_data.get('role')
-                    # attr_placeholder = attributes_data.get('placeholder')
-                    # attr_value = attributes_data.get('value')
-                    # attr_title = attributes_data.get('title')
-                    # attr_aria_label = attributes_data.get('aria-label')
+
 
                     #add here if there is more attributes, add by prioritization from highest (left) to the lowest (right)
+                    #Will prioritize and build accordingly
                     attr_list = ['id', 'name', 'type', 'value', 'title', 'role', 'placeholder', 'aria-label']
                     for i, attr_name in enumerate(attr_list):
                         final_attrVal = attributes_data.get(attr_name)
@@ -100,35 +97,7 @@ def get_first_xpath(data, stage_number):
 
 
 
-# #to form proper path for the json file and read
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# #print(BASE_DIR)
-# JSON_PATH = os.path.join(BASE_DIR, "data.json")
-# #print(JSON_PATH)
-# print("Looking for:", JSON_PATH)
-
-# try:
-#     with open(JSON_PATH, "r") as file:
-#         data = json.load(file)
-
-
-#         #print("Keys:", data.keys())
-# except FileNotFoundError:
-#     print("File not found:", JSON_PATH)
-# except json.JSONDecodeError:
-#     print("Error: failed to decode json")
-    
-
-# relative_xpath_construct = get_first_xpath(data, 4)
-# print("Final Output: " + str(relative_xpath_construct))
-# with open(JSON_PATH, 'w', encoding="utf-8") as f:
-#     json.dump(data, f, indent=2, ensure_ascii=False)
-#     print("✅ JSON updated with new XPath!")
-
-
-
-
-
+#loop through stage number
 for i in range(1, 5):
     print(f'Entering Stage Number: {i}')
         
@@ -151,8 +120,10 @@ for i in range(1, 5):
     except json.JSONDecodeError:
         print("Error: failed to decode json")
 
-    relative_xpath_construct = get_first_xpath(data, i)
-    print("Final Output: " + str(relative_xpath_construct))
+    #call the functiion and return the relative xpath
+    relative_xpath = relative_xpath_constructor(data, i)
+    print("Final Output: " + str(relative_xpath))
+    #write and update to JSOn for cache related
     with open(JSON_PATH, 'w', encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
         print("✅ JSON updated with new XPath!")
@@ -160,6 +131,8 @@ for i in range(1, 5):
         print("NO MORE STAGE NUMBER LEFT ---------- WILL PROCEED TO END THE CONSTRUCTOR FUNCTION")
     else:
         print("CONSTRUCTION COMPLETED ------- Proceed to the next stage")
+
+
 
 
 
@@ -182,4 +155,21 @@ for i in range(1, 5):
 
 
 
+#test for smart wait function can integrate prompt mapping and set strict rules for it
+#Recommendation:
 
+# ONLY USE VISIBLE ELEMENT INDEXES:
+# - If you need an element that's not in the current state.
+#   - When the page not fully ready yet, use wait action.
+#   - When the object not fully ready yet, use wait_for_object_is_visible function
+#   - If you are using wait_for_object_is_visible function, look for True boolean value to check if the object is ready and visible
+#   - Do NOT proceed if the wait_for_object_is_visible function returns False boolean value
+#   - Take an actions to make it visible (scroll, extract content, navigate, expanding element, etc.)
+# - Do NOT use element indexes that you think might exist or that you remember from previous screens
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page()
+    page.goto("https://www.saucedemo.com/")
+    BoolVal = wait_for_object_is_visible(page, "//input[@id='login-button']")
+    print(BoolVal)

@@ -1,5 +1,6 @@
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright 
+from playwright.sync_api import expect
 
 #to scrape elements
 def scrape_elements(url, selector):
@@ -7,7 +8,7 @@ def scrape_elements(url, selector):
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.goto(url)
-
+        
         elements = page.query_selector_all(selector)
         data = []
 
@@ -33,3 +34,6 @@ def scrape_elements(url, selector):
 
         browser.close()
         return data
+    
+
+

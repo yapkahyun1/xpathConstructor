@@ -7,5 +7,6 @@ function getElementAttributes(element) {
     result[attr.name] = attr.value;
   }
 
+
   return result;
 }
